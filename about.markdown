@@ -1,18 +1,13 @@
 ---
-layout: page
+layout: single
 title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+Welcome to my corner of the internet, where I dive deep into APT malware, reverse engineering, and threat intelligence. Currently working at Solar 4RAYS Cyber Threat Research Center, I have an insatiable curiosity for dissecting advanced threats, unraveling malicious code, and understanding the minds behind cyber attacks.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+My primary focus? Reverse engineering APT malware — breaking it down, piece by piece, to expose its inner workings. Lately, I’ve also been exploring the rise of Rust-based malware, analyzing its stealth tactics and impact on modern cybersecurity.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+This blog is my space to share research, insights, and discoveries — whether it’s deep-dive malware breakdowns, threat actor analyses, or the latest trends in cyber warfare. If you’re passionate about malware analysis and cyber threat intelligence, you’re in the right place.
 
-
-[jekyll-organization]: https://github.com/jekyll
+All opinions here are my own. Let’s hunt some threats.
