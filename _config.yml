@@ -28,8 +28,8 @@ description: >- # this means to ignore newlines until "baseurl:"
   reverse engineering techniques, and insights into the latest trends in the cybersecurity landscape. 
   Whether you're a fellow researcher, security professional, or just curious about cyber threats, 
   this blog aims to provide valuable analysis and actionable intelligence.
-baseurl: "/" # the subpath of your site, e.g. /blog
-url: "kumih0x.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: "kumih0x"
 github_username:  "kumih0x"
 
