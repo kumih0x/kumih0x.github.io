@@ -34,10 +34,12 @@ twitter_username: "kumih0x"
 github_username:  "kumih0x"
 
 # Build settings
-theme: "minimal-mistakes-jekyll"
+remote_theme: "mmistakes/minimal-mistakes@4.26.2"
+#theme: "minimal-mistakes-jekyll"
 minimal_mistakes_skin: "dark"
 plugins:
   - jekyll-feed
+  - jekyll-include-cache 
 
 # Exclude from processing.
 # The following items will not be processed, by default.
