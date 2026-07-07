@@ -1,4 +1,5 @@
 title: kumih0x — Security Research Blog
+tagline: Malware reverse engineering, threat hunting & low-level research notes
 description: >-
   Welcome to my research blog, where I explore the ever-evolving world of malware analysis and threat intelligence.
   As a malware analyst and threat intelligence researcher, I dissect the latest cyber threats, analyze malicious code,
@@ -36,6 +37,12 @@ defaults:
       type: posts
     values:
       layout: post
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/images/kum1h0x.png
+        alt: "kum1h0x — pixel-fox mascot logo"
 
 sass:
   sass_dir: _sass
