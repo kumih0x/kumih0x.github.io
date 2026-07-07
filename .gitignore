@@ -1,6 +1,14 @@
-_site
-.sass-cache
-.jekyll-cache
+# Jekyll build output & caches
+_site/
+.sass-cache/
+.jekyll-cache/
 .jekyll-metadata
-vendor
+
+# Bundler
+.bundle/
+vendor/
 Gemfile.lock
+
+# OS / editor cruft
+.DS_Store
+*.swp

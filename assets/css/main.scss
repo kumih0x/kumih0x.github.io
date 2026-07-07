@@ -1,0 +1,933 @@
+---
+---
+
+$bg: #1d2021;
+$fg: #ebdbb2;
+$orange: #fe8019;
+$yellow: #fabd2f;
+$gray: #928374;
+$panel: #282828;
+$border: #3c3836;
+$green: #b8bb26;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: $bg;
+  color: $fg;
+  font-family: "JetBrains Mono", monospace;
+  margin: 0;
+  line-height: 1.7;
+}
+
+a {
+  color: $orange;
+  text-decoration: none;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: $yellow;
+  }
+}
+
+// Reading progress bar (post pages only — width is driven by JS)
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, $orange, $yellow);
+  z-index: 200;
+  transition: width 0.1s linear;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 3rem;
+  border-bottom: 1px solid $border;
+  position: sticky;
+  top: 0;
+  background: rgba(29,32,33,0.98);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.1rem;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
+.prompt {
+  color: $orange;
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+
+.logo-text {
+  color: $yellow;
+}
+
+nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: $gray;
+  font-size: 0.95rem;
+  
+  &:hover, &.active {
+    color: $yellow;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem;
+}
+
+// Hero Section
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 500px;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  padding: 2.5rem;
+  background: $panel;
+  border: 1px solid $border;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.hero-content {
+  h1 {
+    font-size: 2.8rem;
+    margin: 0 0 1.5rem 0;
+    color: $yellow;
+    line-height: 1.2;
+  }
+  
+  .hero-description {
+    color: $gray;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+}
+
+// One-shot glitch flicker on the hero title when the page loads.
+// Runs a single time (no infinite loop) so it doesn't distract while reading.
+@media (prefers-reduced-motion: no-preference) {
+  .hero-content h1 {
+    animation: heroGlitch 0.5s steps(2, end) 1;
+  }
+}
+
+@keyframes heroGlitch {
+  0% { transform: translate(0, 0); text-shadow: none; }
+  20% { transform: translate(-2px, 1px); text-shadow: 2px 0 $orange, -2px 0 $green; }
+  40% { transform: translate(2px, -1px); text-shadow: -2px 0 $orange, 2px 0 $green; }
+  60% { transform: translate(-1px, 0); text-shadow: 1px 0 $orange, -1px 0 $green; }
+  80% { transform: translate(1px, 0); text-shadow: none; }
+  100% { transform: translate(0, 0); text-shadow: none; }
+}
+
+.terminal-command {
+  margin-top: 1.5rem;
+  
+  .prompt {
+    color: $green;
+  }
+  
+  .command-output {
+    color: $fg;
+    margin-left: 0.5rem;
+    transition: opacity 0.4s ease;
+  }
+}
+
+// Blinking terminal cursor next to the typed command
+.type-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 3px;
+  background: $green;
+  vertical-align: text-bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .type-cursor {
+    animation: cursorBlink 1s steps(1, end) infinite;
+  }
+}
+
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+// Content Grid
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2.5rem;
+}
+
+// Section titles (used on the homepage post list and the About page)
+.section-title {
+  color: $yellow;
+  font-size: 1.4rem;
+  margin: 2.5rem 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid $border;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-item {
+  background: $panel;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 1.75rem;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: $gray;
+    transform: translateX(4px);
+  }
+}
+
+// Most recent post, highlighted as the "latest research" entry
+.post-item--featured {
+  border-color: rgba(254, 128, 25, 0.5);
+  box-shadow: 0 0 0 1px rgba(254, 128, 25, 0.15);
+
+  .post-title a {
+    font-size: 1.05em;
+  }
+
+  &:hover {
+    border-color: $orange;
+  }
+}
+
+.featured-badge {
+  background: rgba(254, 128, 25, 0.15);
+  color: $orange;
+  border: 1px solid rgba(254, 128, 25, 0.4);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// Scroll-reveal: JS adds .reveal on supported/motion-allowed browsers,
+// then .is-visible once the element enters the viewport. Content stays
+// fully visible by default so it never depends on JS to be readable.
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.post-date {
+  color: $gray;
+  font-size: 0.9rem;
+}
+
+.post-icon {
+  font-size: 1.2rem;
+}
+
+.post-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  
+  a {
+    color: $yellow;
+    
+    &:hover {
+      color: $orange;
+    }
+  }
+}
+
+.post-excerpt {
+  color: $gray;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: rgba(184, 187, 38, 0.15);
+  color: $green;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(184, 187, 38, 0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  &:hover {
+    background: rgba(184, 187, 38, 0.25);
+    border-color: $green;
+  }
+}
+
+.read-time {
+  color: $gray;
+  font-size: 0.85rem;
+}
+
+.older-posts {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: $yellow;
+  font-weight: 700;
+  
+  &:hover {
+    color: $orange;
+  }
+}
+
+// Sidebar
+.sidebar {
+  .sidebar-block {
+    background: $panel;
+    border: 1px solid $border;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    h3 {
+      color: $yellow;
+      margin: 0 0 1.25rem 0;
+      font-size: 1.1rem;
+    }
+    
+    p {
+      color: $gray;
+      font-size: 0.95rem;
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+  
+  // Tag Cloud
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .tag-item {
+    background: rgba(251, 175, 63, 0.1);
+    border: 1px solid rgba(251, 175, 63, 0.3);
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: $fg;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    
+    &:hover {
+      background: rgba(251, 175, 63, 0.2);
+      border-color: $yellow;
+      transform: translateY(-2px);
+    }
+    
+    &.active {
+      background: rgba(251, 175, 63, 0.3);
+      border-color: $yellow;
+      box-shadow: 0 0 10px rgba(251, 175, 63, 0.3);
+    }
+    
+    .tag-count {
+      color: $gray;
+      font-size: 0.8rem;
+      background: rgba(146, 131, 116, 0.2);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+    }
+  }
+  
+  .active-filter {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(184, 187, 38, 0.1);
+    border: 1px solid $green;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .filter-tag {
+      color: $green;
+      font-weight: 700;
+    }
+    
+    .clear-filter {
+      background: none;
+      border: none;
+      color: $gray;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
+      margin-left: auto;
+      
+      &:hover {
+        color: $fg;
+      }
+    }
+  }
+  
+  .tools-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      padding: 0.5rem 0;
+      color: $gray;
+      font-size: 0.95rem;
+      
+      &:before {
+        content: "• ";
+        color: $orange;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+  
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      margin-bottom: 0.75rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  .contact-link {
+    color: $green;
+    font-size: 0.95rem;
+    
+    &:hover {
+      color: $yellow;
+    }
+  }
+}
+
+// About page — single-column hero (no side terminal card here)
+.hero.about-hero {
+  display: block;
+}
+
+.about-content {
+  p {
+    color: $gray;
+  }
+}
+
+.about-outro {
+  margin-top: 2rem;
+  color: $fg;
+}
+
+// Topics list
+.topics-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding: 0.5rem 0;
+    color: $gray;
+    border-bottom: 1px solid $border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:before {
+      content: "▸ ";
+      color: $orange;
+    }
+  }
+}
+
+// Post page
+.post {
+  max-width: 760px;
+  margin: 0 auto;
+
+  > h1 {
+    color: $yellow;
+    font-size: 2.2rem;
+    line-height: 1.3;
+    margin: 0.75rem 0 1rem;
+  }
+
+  > .tags {
+    margin-bottom: 2rem;
+  }
+}
+
+.post-content {
+  // Markdown content commonly starts headings at h1 (e.g. "# Overview"),
+  // even though the page already renders the real post title as an h1.
+  // Style both the same so it looks intentional either way.
+  h1, h2 {
+    color: $yellow;
+    font-size: 1.5rem;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $border;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    color: $orange;
+    font-size: 1.15rem;
+    margin: 2rem 0 0.75rem;
+  }
+
+  p {
+    margin: 0 0 1.25rem;
+  }
+
+  ul, ol {
+    margin: 0 0 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      position: relative;
+      padding-left: 1.25rem;
+
+      &::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: $orange;
+      }
+    }
+  }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding: 0.5rem 1.25rem;
+    border-left: 3px solid $orange;
+    color: $gray;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.02);
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // Inline code gets a subtle pill; fenced code blocks (pre code) reset it
+  // since they already have their own background via .highlight/pre.
+  code {
+    background: rgba(146, 131, 116, 0.15);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid $border;
+    margin: 2.5rem 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+
+    th, td {
+      padding: 0.6rem 0.9rem;
+      border: 1px solid $border;
+      text-align: left;
+    }
+
+    th {
+      background: $panel;
+      color: $yellow;
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  }
+}
+
+// Footer
+.site-footer {
+  margin-top: 4rem;
+  padding: 2rem 3rem;
+  border-top: 1px solid $border;
+  background: $panel;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  color: $gray;
+  font-size: 0.9rem;
+}
+
+.heart {
+  color: #fb4934;
+}
+
+// No posts message
+.no-posts-message {
+  text-align: center;
+  padding: 3rem;
+  color: $gray;
+  font-style: italic;
+  border: 1px dashed $border;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+// Responsive
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    order: 2;
+  }
+  
+  .site-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  nav {
+    gap: 1.5rem;
+  }
+  
+  .container {
+    padding: 1.5rem;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .post-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 70%;
+    height: auto;
+    display: block;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    image-rendering: pixelated; // Чёткость пиксель-арта
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  }
+}
+
+// Code block styling
+pre {
+  position: relative; // Нужно для позиционирования кнопки копирования
+  background: #1b1b1b;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+code {
+  font-family: "JetBrains Mono", monospace;
+  color: $fg;
+}
+
+pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 0;
+}
+
+// Syntax highlighting (gruvbox colors)
+.highlight {
+  background: #1b1b1b;
+  border: 1px solid $border;
+  border-radius: 8px;
+  position: relative;
+  margin: 1.5rem 0;
+  
+  pre {
+    margin: 0;
+    padding: 1.5rem;
+    border: none;
+    background: transparent;
+  }
+  
+  // Gruvbox syntax colors
+  .c { color: #928374; font-style: italic } // Comment
+  .err { color: #fb4934 } // Error
+  .esc { color: #ebdbb2 } // Escape
+  .g { color: #ebdbb2 } // Generic
+  .k { color: #fb4934; font-weight: bold } // Keyword
+  .l { color: #ebdbb2 } // Literal
+  .n { color: #ebdbb2 } // Name
+  .o { color: #fe8019 } // Operator
+  .x { color: #ebdbb2 } // Other
+  .p { color: #ebdbb2 } // Punctuation
+  .ch { color: #928374; font-style: italic } // Comment.Hashbang
+  .cm { color: #928374; font-style: italic } // Comment.Multiline
+  .cp { color: #8ec07c; font-weight: bold } // Comment.Preproc
+  .cpf { color: #928374; font-style: italic } // Comment.PreprocFile
+  .c1 { color: #928374; font-style: italic } // Comment.Single
+  .cs { color: #928374; font-style: italic } // Comment.Special
+  .gd { color: #fb4934 } // Generic.Deleted
+  .ge { color: #ebdbb2; font-style: italic } // Generic.Emph
+  .gr { color: #fb4934 } // Generic.Error
+  .gh { color: #ebdbb2; font-weight: bold } // Generic.Heading
+  .gi { color: #b8bb26 } // Generic.Inserted
+  .go { color: #928374 } // Generic.Output
+  .gp { color: #fe8019; font-weight: bold } // Generic.Prompt
+  .gs { color: #ebdbb2; font-weight: bold } // Generic.Strong
+  .gu { color: #ebdbb2; text-decoration: underline } // Generic.Subheading
+  .gt { color: #fb4934 } // Generic.Traceback
+  .kc { color: #fb4934; font-weight: bold } // Keyword.Constant
+  .kd { color: #fb4934; font-weight: bold } // Keyword.Declaration
+  .kn { color: #fb4934; font-weight: bold } // Keyword.Namespace
+  .kp { color: #fb4934 } // Keyword.Pseudo
+  .kr { color: #fb4934; font-weight: bold } // Keyword.Reserved
+  .kt { color: #fabd2f } // Keyword.Type
+  .ld { color: #b8bb26 } // Literal.Date
+  .m { color: #d3869b } // Literal.Number
+  .s { color: #b8bb26 } // Literal.String
+  .na { color: #fabd2f } // Name.Attribute
+  .nb { color: #fe8019 } // Name.Builtin
+  .bp { color: #fe8019 } // Name.Builtin.Pseudo
+  .nc { color: #fabd2f } // Name.Class
+  .no { color: #d3869b } // Name.Constant
+  .nd { color: #8ec07c } // Name.Decorator
+  .ni { color: #ebdbb2 } // Name.Entity
+  .ne { color: #fb4934 } // Name.Exception
+  .nf { color: #8ec07c } // Name.Function
+  .fm { color: #8ec07c } // Name.Function.Magic
+  .nl { color: #ebdbb2 } // Name.Label
+  .nn { color: #fabd2f } // Name.Namespace
+  .nx { color: #ebdbb2 } // Name.Other
+  .py { color: #ebdbb2 } // Name.Property
+  .nt { color: #fb4934 } // Name.Tag
+  .nv { color: #8ec07c } // Name.Variable
+  .vc { color: #8ec07c } // Name.Variable.Class
+  .vg { color: #8ec07c } // Name.Variable.Global
+  .vi { color: #8ec07c } // Name.Variable.Instance
+  .vm { color: #8ec07c } // Name.Variable.Magic
+  .ow { color: #fb4934; font-weight: bold } // Operator.Word
+  .w { color: #ebdbb2 } // Text.Whitespace
+}
+
+.copy-code-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: $panel;
+  border: 1px solid $border;
+  color: $gray;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0; // Скрыта по умолчанию, как в IDE
+  transform: translateY(-4px);
+
+  // Появляется при наведении на блок кода
+  pre:hover & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    background: $border;
+    color: $yellow;
+    border-color: $yellow;
+  }
+
+  &.copied {
+    opacity: 1;
+    transform: translateY(0);
+    background: rgba(184, 187, 38, 0.15);
+    border-color: $green;
+    color: $green;
+  }
+
+  .icon-copy {
+    flex-shrink: 0;
+  }
+}
+
+// Code block header (language label, injected by copy.js for fenced blocks)
+.code-header {
+  margin: 1.5rem 0 0;
+  background: #3c3836;
+  padding: 0.6rem 1rem;
+  border: 1px solid $border;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+
+  .code-language {
+    color: $gray;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.highlight {
+  pre {
+    border-radius: 0 0 8px 8px;
+  }
+
+  &.with-header {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    pre {
+      border-radius: 0 0 8px 8px;
+      margin: 0;
+    }
+  }
+}

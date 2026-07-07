@@ -1,0 +1,188 @@
+---
+layout: default
+title: Home
+---
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>kum1h0x blog</h1>
+    <p class="hero-description">
+      Thinking out loud about malware,<br>
+      reversing and everything in between.
+    </p>
+    <div class="terminal-command">
+      <span class="prompt">$</span> <span class="typed-text" data-typed="whoami">whoami</span><span class="type-cursor" aria-hidden="true"></span><br>
+      <span class="command-output" data-output="Senior Malware Analyst">Senior Malware Analyst</span>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="/assets/images/pixel-art-computer.svg" alt="Terminal setup">
+  </div>
+</section>
+
+<div class="content-grid">
+  <main class="posts-section">
+    <h2 class="section-title">Latest Posts</h2>
+    <div class="posts-list" id="postsList">
+      {% for post in site.posts %}
+      <article class="post-item{% if forloop.first %} post-item--featured{% endif %}" data-tags="{{ post.tags | join: ',' }}">
+        <div class="post-header">
+          {% if forloop.first %}<span class="featured-badge">Latest research</span>{% endif %}
+          <span class="post-date">{{ post.date | date: "%b %d, %Y" }}</span>
+        </div>
+        <h3 class="post-title">
+          <a href="{{ post.url }}">{{ post.title }}</a>
+        </h3>
+        <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 20 }}</p>
+        <div class="post-footer">
+          <div class="tags">
+            {% for tag in post.tags %}
+            <span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <span class="read-time">{{ post.content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <a href="#" class="older-posts">← Older posts</a>
+  </main>
+
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <h3>About me</h3>
+      <p>
+        Malware analyst focused on reverse engineering, low-level internals and offensive research.
+      </p>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>Popular tags</h3>
+      <div class="tag-cloud" id="tagCloud">
+        {% assign tags = site.tags | sort %}
+        {% for tag in tags %}
+        <span class="tag-item" data-tag="{{ tag[0] }}" data-count="{{ tag[1] | size }}">
+          {{ tag[0] }} <span class="tag-count">{{ tag[1] | size }}</span>
+        </span>
+        {% endfor %}
+      </div>
+      <div id="activeTagFilter" class="active-filter" style="display: none;">
+        Filtering by: <span class="filter-tag"></span> 
+        <button class="clear-filter" onclick="clearFilter()">✕</button>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>Tools I use</h3>
+      <ul class="tools-list">
+        <li>IDA Pro</li>
+        <li>Ghidra</li>
+        <li>x64dbg</li>
+        <li>Binary Ninja</li>
+        <li>Wireshark</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>Contact</h3>
+      <ul class="contact-list">
+        <li><a href="https://github.com/kumih0x" class="contact-link">🐙 GitHub</a></li>
+        <li><a href="https://x.com/kumih0x" class="contact-link">🐦 Twitter / X</a></li>
+        <li><a href="https://www.linkedin.com/in/vladimir-s-7917b5201/" class="contact-link">💼 LinkedIn</a></li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<script>
+  // Tag filtering functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const tagItems = document.querySelectorAll('.tag-item');
+    const posts = document.querySelectorAll('.post-item');
+    const activeFilter = document.getElementById('activeTagFilter');
+    const filterTagSpan = activeFilter.querySelector('.filter-tag');
+
+    tagItems.forEach(tag => {
+      tag.addEventListener('click', function() {
+        const selectedTag = this.getAttribute('data-tag');
+        filterPosts(selectedTag);
+        activeFilter.style.display = 'block';
+        filterTagSpan.textContent = selectedTag;
+        
+        // Update active state
+        tagItems.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Make tags in posts clickable
+    const postTags = document.querySelectorAll('.post-item .tag');
+    postTags.forEach(tag => {
+      tag.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const selectedTag = this.getAttribute('data-tag');
+        const sidebarTag = document.querySelector(`.tag-item[data-tag="${selectedTag}"]`);
+        if (sidebarTag) {
+          sidebarTag.click();
+          sidebarTag.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // Apply filter when arriving from a post page via ?tag=... link
+    const requestedTag = new URLSearchParams(window.location.search).get('tag');
+    if (requestedTag) {
+      const sidebarTag = document.querySelector(`.tag-item[data-tag="${requestedTag}"]`);
+      if (sidebarTag) {
+        sidebarTag.click();
+        sidebarTag.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function filterPosts(tag) {
+      let visibleCount = 0;
+      posts.forEach(post => {
+        const postTags = post.getAttribute('data-tags');
+        if (postTags && postTags.includes(tag)) {
+          post.style.display = 'block';
+          visibleCount++;
+        } else {
+          post.style.display = 'none';
+        }
+      });
+      
+      // Remove existing message
+      const existingMessage = document.querySelector('.no-posts-message');
+      if (existingMessage) {
+        existingMessage.remove();
+      }
+      
+      // Show message if no posts found
+      if (visibleCount === 0) {
+        const message = document.createElement('div');
+        message.className = 'no-posts-message';
+        message.textContent = 'No posts found for this tag';
+        document.getElementById('postsList').appendChild(message);
+      }
+    }
+  });
+
+  function clearFilter() {
+    const posts = document.querySelectorAll('.post-item');
+    const activeFilter = document.getElementById('activeTagFilter');
+    const tagItems = document.querySelectorAll('.tag-item');
+    
+    posts.forEach(post => {
+      post.style.display = 'block';
+    });
+    
+    activeFilter.style.display = 'none';
+    tagItems.forEach(t => t.classList.remove('active'));
+    
+    const existingMessage = document.querySelector('.no-posts-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+  }
+</script>
